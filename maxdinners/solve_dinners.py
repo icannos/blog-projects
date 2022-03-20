@@ -34,6 +34,18 @@ def config(speed=750):
             hours=distance.distance((t1[3], t1[4]), (t2[3], t2[4])).km / speed
         )
 
+    def current_time_path(path):
+        t = tuples[path[0]][1] + datetime.timedelta(minutes=30)
+
+        for i in range(len(path) - 1):
+            t += d(tuples[i], tuples[i + 1])
+            if t <= tuples[path[i + 1]][1]:
+                t += datetime.timedelta(minutes=30)
+            else:
+                t = tuples[path[i + 1]][1] + datetime.timedelta(minutes=30)
+
+        return t
+
     def maxdinners(current_path, left):
         bpath = []
         path = []
@@ -47,6 +59,10 @@ def config(speed=750):
                 if tuples[i][1] >= tuples[current_path[-1]][2] + d(
                     tuples[i], tuples[current_path[-1]]
                 ):
+                    # current_time = current_time_path(current_path) + d(
+                    #     tuples[i], tuples[current_path[-1]]
+                    # )
+                    # if current_time <= tuples[i][2] - datetime.timedelta(minutes=30):
                     current_path.append(i)
                     path = maxdinners(current_path, left - {i})
                     current_path.pop()
